@@ -1,0 +1,39 @@
+### Add Teacher
+POST http://localhost:8080/api/teachers/add
+Content-Type: application/json
+
+{
+  "name": "Ravi",
+  "username": "ravi123",
+  "password": "1234",
+  "subject": "Maths",
+  "role": "TEACHER",
+  "mobile": "9876543210"
+}
+
+###
+
+### Add Student
+POST http://localhost:8080/api/students/add
+Content-Type: application/json
+
+{
+  "name": "Rahul",
+  "studentClass": 6,
+  "section": "A",
+  "parentMobile": "9999999999"
+}
+
+###
+
+### Add Homework
+POST http://localhost:8080/api/homework/add/1
+Content-Type: application/json
+
+{
+  "studentClass": 6,
+  "section": "A",
+  "subject": "Maths",
+  "content": "Complete exercise 3.1",
+  "createdAt": "20-05-2026"
+}
