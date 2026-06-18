@@ -63,4 +63,17 @@ public class AttendanceService {
 
         return repository.findByStudentId(studentId);
     }
+
+    public List<Attendance> getAttendanceReportByStudentId(
+            Long studentId,
+            String fromDate,
+            String toDate
+    ) {
+
+        return repository.findByStudentIdAndAttendanceDateBetween(
+                studentId,
+                fromDate,
+                toDate
+        );
+    }
 }

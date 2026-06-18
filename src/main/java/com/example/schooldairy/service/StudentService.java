@@ -95,4 +95,17 @@ public class StudentService {
 
         return repository.save(existing);
     }
+
+    public List<Student> getStudentsByClassAndSection(
+
+            int studentClass,
+
+            String section
+    ) {
+
+        return repository.findByStudentClassAndSection(
+                studentClass,
+                section
+        );
+    }
 }

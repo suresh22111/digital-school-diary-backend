@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/students")
+@CrossOrigin(origins = "http://localhost:3000")
 public class StudentController {
 
     @Autowired
@@ -68,7 +69,19 @@ public class StudentController {
         );
     }
 
+    @GetMapping("/class/{studentClass}/section/{section}")
+    public List<Student> getStudentsByClassAndSection(
 
+            @PathVariable int studentClass,
+
+            @PathVariable String section
+    ) {
+
+        return service.getStudentsByClassAndSection(
+                studentClass,
+                section
+        );
+    }
 
 
 }

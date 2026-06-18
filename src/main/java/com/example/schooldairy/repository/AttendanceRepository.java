@@ -21,4 +21,10 @@ public interface AttendanceRepository
             String fromDate,
             String toDate
     );
+
+    List<Attendance> findByStudentIdAndAttendanceDateBetween(
+            Long studentId,
+            String fromDate,
+            String toDate
+    );
 }

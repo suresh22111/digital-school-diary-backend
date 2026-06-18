@@ -75,4 +75,44 @@ public class AttendanceController {
                 toDate
         );
     }
+
+    @PutMapping("/update/{id}")
+    public Attendance updateAttendance(
+            @PathVariable Long id,
+            @RequestBody Attendance attendance
+    ) {
+
+        attendance.setId(id);
+
+        return attendanceRepository.save(attendance);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteAttendance(
+            @PathVariable Long id
+    ) {
+
+        attendanceRepository.deleteById(id);
+
+        return "Attendance Deleted Successfully";
+    }
+
+    @GetMapping("/student-report")
+    public List<Attendance> getStudentAttendanceReport(
+
+            @RequestParam Long studentId,
+
+            @RequestParam String fromDate,
+
+            @RequestParam String toDate
+    ) {
+
+        return service.getAttendanceReportByStudentId(
+                studentId,
+                fromDate,
+                toDate
+        );
+    }
+
+
 }
