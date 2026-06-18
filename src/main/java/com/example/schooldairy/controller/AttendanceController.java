@@ -4,9 +4,11 @@ import com.example.schooldairy.entity.Attendance;
 import com.example.schooldairy.repository.AttendanceRepository;
 import com.example.schooldairy.service.AttendanceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import com.example.schooldairy.dto.AttendanceAnalyticsDTO;
 
 @RestController
 @RequestMapping("/api/attendance")
@@ -111,6 +113,75 @@ public class AttendanceController {
                 studentId,
                 fromDate,
                 toDate
+        );
+    }
+   @GetMapping("/parent-dashboard/{studentId}")
+    public ResponseEntity<?> getParentDashboard(
+            @PathVariable Long studentId) {
+
+        return ResponseEntity.ok(
+                service.getParentDashboard(studentId)
+        );
+    }
+
+    @GetMapping("/analytics")
+    public AttendanceAnalyticsDTO getAnalytics(
+
+            @RequestParam Integer studentClass,
+
+            @RequestParam String section,
+
+            @RequestParam String attendanceDate
+    ) {
+
+        return service.getAnalytics(
+                studentClass,
+                section,
+                attendanceDate
+        );
+    }
+
+    @GetMapping("/low-attendance")
+    public ResponseEntity<?> getLowAttendanceStudents(
+            @RequestParam double threshold
+    ) {
+
+        return ResponseEntity.ok(
+                service.getLowAttendanceStudents(
+                        threshold
+                )
+        );
+    }
+
+    @GetMapping("/ranking")
+    public ResponseEntity<?> getRanking(
+
+            @RequestParam Integer studentClass,
+
+            @RequestParam String section
+    ) {
+
+        return ResponseEntity.ok(
+                service.getAttendanceRanking(
+                        studentClass,
+                        section
+                )
+        );
+    }
+
+    @GetMapping("/monthly-trend")
+    public ResponseEntity<?> getMonthlyTrend(
+
+            @RequestParam Integer studentClass,
+
+            @RequestParam String section
+    ) {
+
+        return ResponseEntity.ok(
+                service.getMonthlyAttendanceTrend(
+                        studentClass,
+                        section
+                )
         );
     }
 
