@@ -2,9 +2,10 @@ package com.example.schooldairy.service;
 
 import com.example.schooldairy.dto.ReportCardDTO;
 import com.example.schooldairy.entity.Attendance;
-import com.example.schooldairy.entity.MarksSheet;
+import com.example.schooldairy.entity.ExamMarks;
+import com.example.schooldairy.entity.SubjectMarks;
 import com.example.schooldairy.repository.AttendanceRepository;
-import com.example.schooldairy.repository.MarksSheetRepository;
+import com.example.schooldairy.repository.ExamMarksRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,55 +17,71 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportCardService {
 
-    private final MarksSheetRepository marksSheetRepository;
+    private final ExamMarksRepository examMarksRepository;
 
     private final AttendanceRepository attendanceRepository;
 
     public ReportCardDTO generateReportCard(
-            Long studentId
+            Long studentId,
+            String examName
     ) {
 
-        List<MarksSheet> marksList =
-                marksSheetRepository
-                        .findByStudentId(studentId);
+        ExamMarks exam =
+                examMarksRepository
+                        .findFirstByStudentIdAndExamName(
+                                studentId,
+                                examName
+                        )
+                        .orElseThrow(
+                                () -> new RuntimeException(
+                                        "No marks found for student and exam"
+                                )
+                        );
 
         List<Attendance> attendanceList =
                 attendanceRepository
                         .findByStudentId(studentId);
 
-        if (marksList.isEmpty()) {
-            throw new RuntimeException(
-                    "No marks found for student"
-            );
-        }
-
         ReportCardDTO dto =
                 new ReportCardDTO();
 
-        dto.setStudentId(studentId);
+        dto.setStudentId(
+                exam.getStudentId()
+        );
 
         dto.setStudentName(
-                marksList.get(0).getStudentName()
+                exam.getStudentName()
         );
 
         dto.setStudentClass(
-                marksList.get(0).getStudentClass()
+                exam.getStudentClass()
         );
 
         dto.setSection(
-                marksList.get(0).getSection()
+                exam.getSection()
+        );
+
+        dto.setExamName(
+                exam.getExamName()
+        );
+
+        dto.setSubjects(
+                exam.getSubjects()
         );
 
         int totalObtained = 0;
         int totalMax = 0;
 
-        for (MarksSheet mark : marksList) {
+        for (
+                SubjectMarks subject :
+                exam.getSubjects()
+        ) {
 
             totalObtained +=
-                    mark.getMarksObtained();
+                    subject.getMarksObtained();
 
             totalMax +=
-                    mark.getMaxMarks();
+                    subject.getMaxMarks();
         }
 
         dto.setTotalMarksObtained(
@@ -76,8 +93,10 @@ public class ReportCardService {
         );
 
         double percentage =
-                ((double) totalObtained /
-                        totalMax) * 100;
+                totalMax == 0
+                        ? 0
+                        : ((double) totalObtained
+                        / totalMax) * 100;
 
         dto.setPercentage(
                 Math.round(
@@ -104,41 +123,43 @@ public class ReportCardService {
 
         dto.setAttendancePercentage(
                 Math.round(
-                        attendancePercentage
-                                * 100.0
+                        attendancePercentage * 100.0
                 ) / 100.0
         );
 
-        // Grade
+        // Grade Calculation
 
         if (percentage >= 90) {
 
             dto.setFinalGrade("A+");
-
             dto.setRemarks(
                     "Excellent Performance"
             );
 
-        } else if (percentage >= 75) {
+        } else if (percentage >= 80) {
 
             dto.setFinalGrade("A");
-
             dto.setRemarks(
                     "Very Good"
+            );
+
+        } else if (percentage >= 70) {
+
+            dto.setFinalGrade("B+");
+            dto.setRemarks(
+                    "Good Performance"
             );
 
         } else if (percentage >= 60) {
 
             dto.setFinalGrade("B");
-
             dto.setRemarks(
                     "Good"
             );
 
-        } else if (percentage >= 40) {
+        } else if (percentage >= 50) {
 
             dto.setFinalGrade("C");
-
             dto.setRemarks(
                     "Needs Improvement"
             );
@@ -146,7 +167,6 @@ public class ReportCardService {
         } else {
 
             dto.setFinalGrade("D");
-
             dto.setRemarks(
                     "Fail"
             );

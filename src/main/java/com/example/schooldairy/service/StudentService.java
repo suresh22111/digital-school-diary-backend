@@ -18,7 +18,38 @@ public class StudentService {
             Student student
     ) {
 
-        return repository.save(student);
+        Integer studentClass =
+                student.getStudentClass();
+
+        Student lastStudent =
+                repository
+                        .findTopByStudentClassOrderByStudentIdDesc(
+                                studentClass
+                        );
+
+        Long nextStudentId;
+
+        if (lastStudent == null) {
+
+            nextStudentId =
+                    Long.parseLong(
+                            studentClass + "001"
+                    );
+
+        } else {
+
+            nextStudentId =
+                    lastStudent.getStudentId()
+                            + 1;
+        }
+
+        student.setStudentId(
+                nextStudentId
+        );
+
+        return repository.save(
+                student
+        );
     }
 
     public List<Student> getAllStudents() {
@@ -49,10 +80,6 @@ public class StudentService {
                 repository.findById(id)
                         .orElseThrow();
 
-        existing.setStudentId(
-                student.getStudentId()
-        );
-
         existing.setName(
                 student.getName()
         );
@@ -77,10 +104,6 @@ public class StudentService {
                 student.getParentMobile()
         );
 
-        existing.setAddress(
-                student.getAddress()
-        );
-
         existing.setEmail(
                 student.getEmail()
         );
@@ -91,6 +114,10 @@ public class StudentService {
 
         existing.setDateOfBirth(
                 student.getDateOfBirth()
+        );
+
+        existing.setAddress(
+                student.getAddress()
         );
 
         return repository.save(existing);
@@ -106,6 +133,14 @@ public class StudentService {
         return repository.findByStudentClassAndSection(
                 studentClass,
                 section
+        );
+    }
+    public Student getStudentByMobile(
+            String mobile
+    ) {
+
+        return repository.findByParentMobile(
+                mobile
         );
     }
 }

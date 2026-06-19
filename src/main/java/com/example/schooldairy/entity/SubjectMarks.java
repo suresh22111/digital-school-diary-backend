@@ -5,30 +5,26 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "marks_sheet")
-public class MarksSheet {
+@Table(name = "marks_subject")
+public class SubjectMarks {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long studentId;
-
-    private String studentName;
-
-    private Integer studentClass;
-
-    private String section;
-
-    private String examName;
 
     private String subject;
 
+
     private Integer marksObtained;
+
 
     private Integer maxMarks;
 
+
     private String grade;
 
+
     private String remarks;
+
 }

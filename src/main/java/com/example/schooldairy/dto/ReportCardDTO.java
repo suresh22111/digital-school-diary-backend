@@ -1,6 +1,9 @@
 package com.example.schooldairy.dto;
 
+import com.example.schooldairy.entity.SubjectMarks;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class ReportCardDTO {
@@ -12,6 +15,10 @@ public class ReportCardDTO {
     private Integer studentClass;
 
     private String section;
+
+    private String examName;
+
+    private List<SubjectMarks> subjects;
 
     private Integer totalMarksObtained;
 

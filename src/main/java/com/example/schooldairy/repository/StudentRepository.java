@@ -14,5 +14,15 @@ public interface StudentRepository
             String section
     );
 
-    Optional<Student> findByStudentId(Long studentId);
+    Optional<Student> findByStudentId(
+            Long studentId
+    );
+
+    Student findTopByStudentClassOrderByStudentIdDesc(
+            Integer studentClass
+    );
+
+    Student findByParentMobile(
+            String parentMobile
+    );
 }

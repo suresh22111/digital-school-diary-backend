@@ -1,9 +1,11 @@
 package com.example.schooldairy.controller;
 
 import com.example.schooldairy.entity.Student;
+import com.example.schooldairy.repository.StudentRepository;
 import com.example.schooldairy.service.StudentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +17,9 @@ public class StudentController {
 
     @Autowired
     private StudentService service;
+
+    @Autowired
+    private StudentRepository studentRepository;
 
     // Add student API
     @PostMapping("/add")
@@ -80,6 +85,18 @@ public class StudentController {
         return service.getStudentsByClassAndSection(
                 studentClass,
                 section
+        );
+    }
+
+    @GetMapping("/mobile/{mobile}")
+    public Student getStudentByMobile(
+
+            @PathVariable String mobile
+
+    ) {
+
+        return service.getStudentByMobile(
+                mobile
         );
     }
 

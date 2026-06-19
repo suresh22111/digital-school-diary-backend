@@ -47,7 +47,10 @@ public class SecurityConfig {
                                 "/api/assignments/**",
                                 "/api/report-card/**",
                                 "/api/students/**",
-                                "/uploads/**"
+                                "/uploads/**",
+                                "/logo.png",
+                                "/logo.jpg",
+                                "/static/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
