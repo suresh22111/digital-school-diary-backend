@@ -36,4 +36,6 @@ public class Student {
     private LocalDate dateOfBirth;
 
     private String address;
+
+    private String photoUrl;
 }

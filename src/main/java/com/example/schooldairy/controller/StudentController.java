@@ -7,6 +7,11 @@ import com.example.schooldairy.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import java.util.List;
 
@@ -98,6 +103,48 @@ public class StudentController {
         return service.getStudentByMobile(
                 mobile
         );
+    }
+
+    @PostMapping("/upload-photo")
+    public String uploadPhoto(
+            @RequestParam("file")
+            MultipartFile file
+    ) {
+
+        try {
+
+            String uploadDir =
+                    "uploads/students/";
+
+            String fileName =
+                    System.currentTimeMillis()
+                            + "_"
+                            + file.getOriginalFilename();
+
+            Path path =
+                    Paths.get(
+                            uploadDir + fileName
+                    );
+
+            Files.createDirectories(
+                    path.getParent()
+            );
+
+            Files.write(
+                    path,
+                    file.getBytes()
+            );
+
+            return
+                    "http://localhost:8080/uploads/students/"
+                            + fileName;
+
+        } catch (Exception e) {
+
+            throw new RuntimeException(
+                    e.getMessage()
+            );
+        }
     }
 
 

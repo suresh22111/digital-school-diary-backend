@@ -120,6 +120,10 @@ public class StudentService {
                 student.getAddress()
         );
 
+        existing.setPhotoUrl(
+                student.getPhotoUrl()
+        );
+
         return repository.save(existing);
     }
 
