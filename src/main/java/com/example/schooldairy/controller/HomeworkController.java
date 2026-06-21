@@ -141,4 +141,23 @@ public class HomeworkController {
                     .body(e.getMessage());
         }
     }
+
+    @GetMapping("/class/{studentClass}/section/{section}")
+    public ResponseEntity<List<Homework>>
+    getHomeworkByClassAndSection(
+
+            @PathVariable String studentClass,
+
+            @PathVariable String section
+
+    ) {
+
+        return ResponseEntity.ok(
+                homeworkService
+                        .getHomeworkByClassAndSection(
+                                studentClass,
+                                section
+                        )
+        );
+    }
 }

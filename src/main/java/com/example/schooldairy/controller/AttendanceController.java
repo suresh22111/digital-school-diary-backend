@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.example.schooldairy.dto.AttendanceAnalyticsDTO;
 
 @RestController
@@ -183,6 +186,49 @@ public class AttendanceController {
                         section
                 )
         );
+    }
+
+    @GetMapping("/summary/{studentId}")
+    public Map<String, Object> getAttendanceSummary(
+            @PathVariable Long studentId
+    ) {
+
+        List<Attendance> attendanceList =
+                attendanceRepository
+                        .findByStudentId(studentId);
+
+        long presentDays =
+                attendanceList.stream()
+                        .filter(a ->
+                                "Present".equalsIgnoreCase(
+                                        a.getStatus()
+                                ))
+                        .count();
+
+        long absentDays =
+                attendanceList.stream()
+                        .filter(a ->
+                                "Absent".equalsIgnoreCase(
+                                        a.getStatus()
+                                ))
+                        .count();
+
+        long totalDays =
+                attendanceList.size();
+
+        double percentage =
+                totalDays == 0
+                        ? 0
+                        : ((double) presentDays / totalDays) * 100;
+
+        Map<String, Object> response =
+                new HashMap<>();
+
+        response.put("presentDays", presentDays);
+        response.put("absentDays", absentDays);
+        response.put("attendancePercentage", percentage);
+
+        return response;
     }
 
 

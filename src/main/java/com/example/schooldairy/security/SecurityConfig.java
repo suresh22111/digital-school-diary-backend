@@ -50,7 +50,9 @@ public class SecurityConfig {
                                 "/uploads/**",
                                 "/logo.png",
                                 "/logo.jpg",
-                                "/static/**"
+                                "/static/**",
+                                "/api/id-card/**",
+                                "/api/attendance/summary/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -72,5 +74,13 @@ public class SecurityConfig {
                 );
 
         return http.build();
+    }
+
+    @Bean
+    public org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
+    webSecurityCustomizer() {
+
+        return (web) -> web.ignoring()
+                .requestMatchers("/uploads/**");
     }
 }

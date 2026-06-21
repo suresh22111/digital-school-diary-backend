@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HomeworkService {
 
-    private final HomeworkRepository repository;
+    private final HomeworkRepository homeworkRepository;
 
     private final FileStorageService
             fileStorageService;
@@ -52,7 +52,7 @@ public class HomeworkService {
             hw.setFileName(fileName);
         }
 
-        return repository.save(hw);
+        return homeworkRepository.save(hw);
     }
 
     // ======================================
@@ -61,7 +61,7 @@ public class HomeworkService {
 
     public List<Homework> getAllHomework() {
 
-        return repository.findAll();
+        return homeworkRepository.findAll();
     }
 
     // ======================================
@@ -70,7 +70,7 @@ public class HomeworkService {
 
     public Homework getHomeworkById(Long id) {
 
-        return repository.findById(id)
+        return homeworkRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Homework not found with id: " + id));
     }
 
@@ -106,7 +106,7 @@ public class HomeworkService {
                 hw.setFileName(fileName);
             }
 
-            return repository.save(hw);
+            return homeworkRepository.save(hw);
 
         } catch (Exception e) {
 
@@ -120,11 +120,23 @@ public class HomeworkService {
 
     public void deleteHomework(Long id) {
 
-        if (!repository.existsById(id)) {
+        if (!homeworkRepository.existsById(id)) {
 
             throw new RuntimeException("Homework not found with id: " + id);
         }
 
-        repository.deleteById(id);
+        homeworkRepository.deleteById(id);
+    }
+
+    public List<Homework> getHomeworkByClassAndSection(
+            String studentClass,
+            String section
+    ) {
+
+        return homeworkRepository
+                .findByStudentClassAndSection(
+                        studentClass,
+                        section
+                );
     }
 }
