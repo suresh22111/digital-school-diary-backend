@@ -35,6 +35,12 @@ public class EventController {
         return service.getAllEvents();
     }
 
+    @GetMapping("/active")
+    public List<Event> getActiveEvents() {
+
+        return service.getActiveEvents();
+    }
+
     @GetMapping("/{studentClass}/{section}")
     public List<Event> getEvents(
 

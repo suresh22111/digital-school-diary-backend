@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 
 @Repository
 public interface AnnouncementRepository
@@ -24,4 +25,13 @@ public interface AnnouncementRepository
 
             String section
     );
+
+    @Query(
+            value =
+                    "SELECT * FROM announcements " +
+                            "WHERE STR_TO_DATE(expiry_date,'%Y-%m-%d') >= CURDATE()",
+            nativeQuery = true
+    )
+    List<Announcement>
+    getActiveAnnouncements();
 }

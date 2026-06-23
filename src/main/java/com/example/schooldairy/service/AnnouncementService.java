@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.time.LocalDate;
 @Service
 public class AnnouncementService {
 
@@ -21,6 +21,12 @@ public class AnnouncementService {
     public Announcement addAnnouncement(
             Announcement announcement
     ) {
+
+        announcement.setExpiryDate(
+                LocalDate.now()
+                        .plusDays(2)
+                        .toString()
+        );
 
         return repository.save(
                 announcement
@@ -38,32 +44,57 @@ public class AnnouncementService {
         List<Announcement> result =
                 new ArrayList<>();
 
-        // GLOBAL
         result.addAll(
-
-                repository
-                        .findByIsGlobalTrue()
+                repository.findByIsGlobalTrue()
         );
 
-        // CLASS + SECTION
         result.addAll(
-
-                repository
-                        .findByStudentClassAndSection(
-
-                                studentClass,
-
-                                section
-                        )
+                repository.findByStudentClassAndSection(
+                        studentClass,
+                        section
+                )
         );
 
-        return result;
+        System.out.println("TODAY = " + LocalDate.now());
+
+        result.forEach(a ->
+                System.out.println(
+                        a.getTitle() +
+                                " -> " +
+                                a.getExpiryDate()
+                )
+        );
+
+        return result.stream()
+                .filter(a ->
+                        a.getExpiryDate() != null &&
+                                !LocalDate.parse(
+                                        a.getExpiryDate()
+                                ).isBefore(
+                                        LocalDate.now()
+                                )
+                )
+                .toList();
     }
-
     // GET ALL ANNOUNCEMENTS
     public List<Announcement>
     getAllAnnouncements() {
 
-        return repository.findAll();
+        return repository.findAll()
+                .stream()
+                .filter(a ->
+                        a.getExpiryDate() != null &&
+                                !LocalDate.parse(
+                                        a.getExpiryDate()
+                                ).isBefore(
+                                        LocalDate.now()
+                                )
+                )
+                .toList();
+    }
+
+    public List<Announcement> getActiveAnnouncements() {
+
+        return repository.getActiveAnnouncements();
     }
 }

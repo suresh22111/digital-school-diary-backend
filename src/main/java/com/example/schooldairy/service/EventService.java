@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,13 +23,34 @@ public class EventService {
             Event event
     ) {
 
+        event.setExpiryDate(
+                LocalDate.now()
+                        .plusDays(7)
+                        .toString()
+        );
+
         return repository.save(event);
     }
 
     // Get All Events
     public List<Event> getAllEvents() {
 
-        return repository.findAll();
+        return repository.findAll()
+                .stream()
+                .filter(event ->
+                        event.getExpiryDate() != null &&
+                                !LocalDate.parse(
+                                        event.getExpiryDate()
+                                ).isBefore(
+                                        LocalDate.now()
+                                )
+                )
+                .toList();
+    }
+
+    public List<Event> getActiveEvents() {
+
+        return repository.getActiveEvents();
     }
 
     public List<Event> getEvents(
@@ -52,6 +74,17 @@ public class EventService {
                 )
         );
 
-        return result;
+        return result.stream()
+                .filter(event ->
+                        event.getExpiryDate() != null &&
+                                !LocalDate.parse(
+                                        event.getExpiryDate()
+                                ).isBefore(
+                                        LocalDate.now()
+                                )
+                )
+                .toList();
     }
+
+
 }

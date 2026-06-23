@@ -48,10 +48,13 @@ public class AnnouncementController {
     }
 
     // GET ALL ANNOUNCEMENTS
-    @GetMapping("/all")
-    public List<Announcement>
-    getAllAnnouncements() {
 
-        return service.getAllAnnouncements();
+
+    @GetMapping("/active")
+    public List<Announcement>
+    getActiveAnnouncements() {
+
+        return service
+                .getActiveAnnouncements();
     }
 }

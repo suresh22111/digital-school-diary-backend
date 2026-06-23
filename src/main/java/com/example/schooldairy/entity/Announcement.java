@@ -25,6 +25,8 @@ public class Announcement {
     // GLOBAL ANNOUNCEMENT
     private Boolean isGlobal;
 
+    private String expiryDate;
+
     // GETTERS & SETTERS
 
     public Long getId() {
@@ -84,5 +86,13 @@ public class Announcement {
             Boolean isGlobal
     ) {
         this.isGlobal = isGlobal;
+    }
+
+    public String getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(String expiryDate) {
+        this.expiryDate = expiryDate;
     }
 }

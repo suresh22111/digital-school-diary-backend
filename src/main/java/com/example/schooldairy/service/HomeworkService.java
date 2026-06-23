@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -41,6 +42,10 @@ public class HomeworkService {
         hw.setSubject(subject);
         hw.setContent(content);
         hw.setUploadedBy(uploadedBy);
+
+        hw.setUploadDate(
+                LocalDate.now().toString()
+        );
 
         // Optional File Upload
 
@@ -97,6 +102,11 @@ public class HomeworkService {
             hw.setSection(section);
             hw.setSubject(subject);
             hw.setContent(content);
+            hw.setUploadDate(
+                    java.time.LocalDate.now().toString()
+            );
+
+
 
             if (file != null && !file.isEmpty()) {
 
@@ -135,6 +145,21 @@ public class HomeworkService {
 
         return homeworkRepository
                 .findByStudentClassAndSection(
+                        studentClass,
+                        section
+                );
+    }
+
+    public List<Homework>
+    getActiveHomeworkByClassAndSection(
+
+            String studentClass,
+
+            String section
+    ) {
+
+        return homeworkRepository
+                .getActiveHomeworkByClassAndSection(
                         studentClass,
                         section
                 );

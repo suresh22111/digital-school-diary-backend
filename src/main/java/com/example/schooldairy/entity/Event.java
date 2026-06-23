@@ -29,4 +29,6 @@ public class Event {
     private String section;
 
     private Boolean isGlobal;
+
+    private String expiryDate;
 }

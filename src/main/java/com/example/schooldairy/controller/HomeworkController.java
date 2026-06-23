@@ -160,4 +160,22 @@ public class HomeworkController {
                         )
         );
     }
+
+    @GetMapping("/active/{studentClass}/{section}")
+    public ResponseEntity<List<Homework>>
+    getActiveHomeworkByClassAndSection(
+
+            @PathVariable String studentClass,
+
+            @PathVariable String section
+    ) {
+
+        return ResponseEntity.ok(
+                homeworkService
+                        .getActiveHomeworkByClassAndSection(
+                                studentClass,
+                                section
+                        )
+        );
+    }
 }

@@ -30,4 +30,9 @@ public class Homework {
 
     @Column(name = "uploaded_by")
     private String uploadedBy;
+
+    @Column(name = "upload_date")
+    private String uploadDate;
+
+
 }
