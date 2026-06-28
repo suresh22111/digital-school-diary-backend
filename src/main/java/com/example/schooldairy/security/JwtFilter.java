@@ -40,9 +40,10 @@ public class JwtFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String path = request.getServletPath();
-
         if (
                 path.startsWith("/api/auth")
+                        || path.startsWith("/api/parents")
+                        || path.startsWith("/api/students")
                         || path.startsWith("/api/homework")
                         || path.startsWith("/api/attendance")
                         || path.startsWith("/api/marks")
@@ -51,7 +52,9 @@ public class JwtFilter extends OncePerRequestFilter {
                         || path.startsWith("/api/announcements")
                         || path.startsWith("/api/assignments")
                         || path.startsWith("/api/report-card")
+                        || path.startsWith("/api/id-card")
                         || path.startsWith("/uploads")
+
         ) {
 
             filterChain.doFilter(request, response);

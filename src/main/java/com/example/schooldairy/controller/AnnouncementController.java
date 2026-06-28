@@ -57,4 +57,11 @@ public class AnnouncementController {
         return service
                 .getActiveAnnouncements();
     }
+
+    // GET ALL ANNOUNCEMENTS
+    @GetMapping("/all")
+    public List<Announcement> getAllAnnouncements() {
+
+        return service.getAllAnnouncements();
+    }
 }

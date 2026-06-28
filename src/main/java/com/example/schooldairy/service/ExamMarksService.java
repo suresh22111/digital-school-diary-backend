@@ -140,12 +140,16 @@ public class ExamMarksService {
                     updatedSubject.getMaxMarks()
             );
 
-            existingSubject.setGrade(
-                    updatedSubject.getGrade()
-            );
+            String grade =
+                    calculateGrade(
+                            updatedSubject.getMarksObtained(),
+                            updatedSubject.getMaxMarks()
+                    );
+
+            existingSubject.setGrade(grade);
 
             existingSubject.setRemarks(
-                    updatedSubject.getRemarks()
+                    calculateRemarks(grade)
             );
         }
 
@@ -175,6 +179,65 @@ public class ExamMarksService {
             );
         }
 
+        for (SubjectMarks subject : examMarks.getSubjects()) {
+
+            String grade = calculateGrade(
+                    subject.getMarksObtained(),
+                    subject.getMaxMarks()
+            );
+
+            subject.setGrade(grade);
+
+            subject.setRemarks(
+                    calculateRemarks(grade)
+            );
+
+        }
+
         return repository.save(examMarks);
+    }
+
+    private String calculateGrade(Integer obtained, Integer max) {
+
+        double percentage =
+                (obtained * 100.0) / max;
+
+        if (percentage >= 90)
+            return "A+";
+
+        else if (percentage >= 75)
+            return "A";
+
+        else if (percentage >= 60)
+            return "B";
+
+        else if (percentage >= 35)
+            return "C";
+
+        else
+            return "F";
+    }
+
+
+    private String calculateRemarks(String grade) {
+
+        switch (grade) {
+
+            case "A+":
+                return "Excellent";
+
+            case "A":
+                return "Very Good";
+
+            case "B":
+                return "Good";
+
+            case "C":
+                return "Needs Improvement";
+
+            default:
+                return "Fail";
+        }
+
     }
 }
