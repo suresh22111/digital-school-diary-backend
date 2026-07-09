@@ -2,6 +2,7 @@ package com.example.schooldairy.service;
 
 import com.example.schooldairy.entity.Event;
 
+import com.example.schooldairy.entity.NotificationType;
 import com.example.schooldairy.repository.EventRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,19 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.schooldairy.entity.Student;
+import com.example.schooldairy.repository.StudentRepository;
+
 @Service
 public class EventService {
 
     @Autowired
     private EventRepository repository;
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     // Add Event
     public Event addEvent(
@@ -25,11 +34,47 @@ public class EventService {
 
         event.setExpiryDate(
                 LocalDate.now()
-                        .plusDays(7)
+                        .plusDays(2)
                         .toString()
         );
 
-        return repository.save(event);
+        Event savedEvent =
+                repository.save(event);
+
+// Global Announcement
+        if (Boolean.TRUE.equals(event.getIsGlobal())) {
+
+            notificationService.notifyAllStudents(
+
+                    "New Event",
+
+                    event.getTitle(),
+
+                    NotificationType.EVENT
+
+            );
+
+        }
+// Class Announcement
+        else {
+
+            notificationService.notifyClassStudents(
+
+                    event.getStudentClass(),
+
+                    event.getSection(),
+
+                    "New Event",
+
+                    event.getTitle(),
+
+                    NotificationType.EVENT
+
+            );
+
+        }
+
+        return savedEvent;
     }
 
     // Get All Events

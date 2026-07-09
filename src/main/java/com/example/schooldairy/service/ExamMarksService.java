@@ -5,6 +5,9 @@ import com.example.schooldairy.repository.ExamMarksRepository;
 import com.example.schooldairy.entity.SubjectMarks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.schooldairy.entity.NotificationType;
+import com.example.schooldairy.service.NotificationService;
+
 
 import java.util.List;
 
@@ -14,6 +17,9 @@ public class ExamMarksService {
 
     @Autowired
     private ExamMarksRepository repository;
+
+    @Autowired
+    private NotificationService notificationService;
 
 
     public ExamMarks addMarks(
@@ -179,6 +185,7 @@ public class ExamMarksService {
             );
         }
 
+        // Calculate Grade & Remarks
         for (SubjectMarks subject : examMarks.getSubjects()) {
 
             String grade = calculateGrade(
@@ -194,7 +201,25 @@ public class ExamMarksService {
 
         }
 
-        return repository.save(examMarks);
+        // Save Exam Marks
+        ExamMarks savedMarks =
+                repository.save(examMarks);
+
+        // Create Notification for this Student
+        notificationService.createNotification(
+
+                examMarks.getStudentId(),
+
+                "Exam Results Published",
+
+                examMarks.getExamName()
+                        + " marks have been published.",
+
+                NotificationType.EXAM
+
+        );
+
+        return savedMarks;
     }
 
     private String calculateGrade(Integer obtained, Integer max) {

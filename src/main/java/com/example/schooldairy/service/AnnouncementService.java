@@ -2,6 +2,7 @@ package com.example.schooldairy.service;
 
 import com.example.schooldairy.entity.Announcement;
 
+import com.example.schooldairy.entity.NotificationType;
 import com.example.schooldairy.repository.AnnouncementRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,19 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
+import com.example.schooldairy.entity.Student;
+import com.example.schooldairy.repository.StudentRepository;
 @Service
 public class AnnouncementService {
 
     @Autowired
     private AnnouncementRepository repository;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     // ADD ANNOUNCEMENT
     public Announcement addAnnouncement(
@@ -28,9 +37,62 @@ public class AnnouncementService {
                         .toString()
         );
 
-        return repository.save(
-                announcement
-        );
+        Announcement savedAnnouncement =
+                repository.save(announcement);
+
+// Global Announcement
+        if (Boolean.TRUE.equals(announcement.getIsGlobal())) {
+
+            List<Student> students =
+                    studentRepository.findAll();
+
+            for (Student student : students) {
+
+                notificationService.createAnnouncementNotification(
+
+                        student.getStudentId(),
+
+                        announcement.getTitle()
+
+                );
+
+            }
+
+        }
+// Global Announcement
+        if (Boolean.TRUE.equals(announcement.getIsGlobal())) {
+
+            notificationService.notifyAllStudents(
+
+                    "New Announcement",
+
+                    announcement.getTitle(),
+
+                    NotificationType.ANNOUNCEMENT
+
+            );
+
+        }
+// Class Announcement
+        else {
+
+            notificationService.notifyClassStudents(
+
+                    announcement.getStudentClass(),
+
+                    announcement.getSection(),
+
+                    "New Announcement",
+
+                    announcement.getTitle(),
+
+                    NotificationType.ANNOUNCEMENT
+
+            );
+
+        }
+
+        return savedAnnouncement;
     }
 
     // GET GLOBAL + CLASS ANNOUNCEMENTS

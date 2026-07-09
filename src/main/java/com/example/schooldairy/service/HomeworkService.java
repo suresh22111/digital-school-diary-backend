@@ -1,12 +1,16 @@
 package com.example.schooldairy.service;
 
 import com.example.schooldairy.entity.Homework;
+import com.example.schooldairy.entity.NotificationType;
 import com.example.schooldairy.repository.HomeworkRepository;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.schooldairy.entity.Student;
+import com.example.schooldairy.repository.StudentRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +23,10 @@ public class HomeworkService {
 
     private final FileStorageService
             fileStorageService;
+
+    private final StudentRepository studentRepository;
+
+    private final NotificationService notificationService;
 
     // ======================================
     // Upload Homework
@@ -57,7 +65,26 @@ public class HomeworkService {
             hw.setFileName(fileName);
         }
 
-        return homeworkRepository.save(hw);
+        Homework savedHomework =
+                homeworkRepository.save(hw);
+
+        notificationService.notifyClassStudents(
+
+                Integer.parseInt(studentClass),
+
+                section,
+
+                "Homework Uploaded",
+
+                "New homework has been uploaded for " + subject,
+
+                NotificationType.HOMEWORK
+
+        );
+
+        return savedHomework;
+
+
     }
 
     // ======================================
