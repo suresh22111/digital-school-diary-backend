@@ -9,6 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+
+import java.util.Map;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,6 +30,8 @@ public class StudentController {
 
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private Cloudinary cloudinary;
 
     // Add student API
     @PostMapping("/add")
@@ -107,45 +114,28 @@ public class StudentController {
 
     @PostMapping("/upload-photo")
     public String uploadPhoto(
-            @RequestParam("file")
-            MultipartFile file
+            @RequestParam("file") MultipartFile file
     ) {
 
         try {
 
-            String uploadDir =
-                    "uploads/students/";
-
-            String fileName =
-                    System.currentTimeMillis()
-                            + "_"
-                            + file.getOriginalFilename();
-
-            Path path =
-                    Paths.get(
-                            uploadDir + fileName
-                    );
-
-            Files.createDirectories(
-                    path.getParent()
+            Map uploadResult = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.emptyMap()
             );
 
-            Files.write(
-                    path,
-                    file.getBytes()
-            );
+            String url = uploadResult.get("secure_url").toString();
 
-            return
-                    "https://digital-school-diary-backend-production.up.railway.app/uploads/students/"
-                            + fileName;
+            System.out.println("Cloudinary URL: " + url);
+
+            return url;
 
         } catch (Exception e) {
 
             throw new RuntimeException(
-                    e.getMessage()
+                    "Photo upload failed: " + e.getMessage()
             );
+
         }
     }
-
-
 }
