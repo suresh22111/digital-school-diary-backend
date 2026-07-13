@@ -14,12 +14,14 @@ import java.util.Date;
 
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @Service
 public class JwtService {
+    @Value("${jwt.secret}")
+    private String SECRET_KEY;
 
-    // SECRET KEY
-    private final String SECRET_KEY =
-            "myverysecuresecretkeyforjwtgeneration123456789";
+
 
     // GET SIGNING KEY
     private Key getSigningKey() {
