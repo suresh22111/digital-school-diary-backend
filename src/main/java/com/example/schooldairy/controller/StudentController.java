@@ -136,7 +136,7 @@ public class StudentController {
             );
 
             return
-                    "http://localhost:8080/uploads/students/"
+                    "https://digital-school-diary-backend-production.up.railway.app/uploads/students/"
                             + fileName;
 
         } catch (Exception e) {

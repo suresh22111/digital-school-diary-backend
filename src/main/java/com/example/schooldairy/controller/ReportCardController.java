@@ -82,7 +82,7 @@ public class ReportCardController {
             // SCHOOL LOGO
             // ==========================
 
-            Image logo =
+          /*  Image logo =
                     Image.getInstance(
                             "src/main/resources/static/logo.jpg"
                     );
@@ -98,7 +98,7 @@ public class ReportCardController {
 
             document.add(
                     logo
-            );
+            ); */
 
             // ==========================
             // SCHOOL NAME
