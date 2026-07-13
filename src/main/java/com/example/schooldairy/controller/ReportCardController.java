@@ -12,6 +12,7 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Image;
+import java.io.InputStream;
 
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -82,24 +83,21 @@ public class ReportCardController {
             // SCHOOL LOGO
             // ==========================
 
-          /*  Image logo =
-                    Image.getInstance(
-                            "src/main/resources/static/logo.jpg"
-                    );
+            InputStream inputStream =
+                    getClass().getResourceAsStream("/static/logo.jpg");
 
-            logo.scaleToFit(
-                    80,
-                    80
-            );
+            if (inputStream != null) {
 
-            logo.setAlignment(
-                    Element.ALIGN_CENTER
-            );
+                Image logo = Image.getInstance(
+                        inputStream.readAllBytes()
+                );
 
-            document.add(
-                    logo
-            ); */
+                logo.scaleToFit(80, 80);
 
+                logo.setAlignment(Element.ALIGN_CENTER);
+
+                document.add(logo);
+            }
             // ==========================
             // SCHOOL NAME
             // ==========================
