@@ -18,7 +18,10 @@ public class CorsConfig {
                 new CorsConfiguration();
 
         configuration.setAllowedOrigins(
-                List.of("http://localhost:3000")
+                List.of(
+                        "http://localhost:3000",
+                        "https://digital-school-diary-frontend-xf3l.vercel.app"
+                )
         );
 
         configuration.setAllowedMethods(
