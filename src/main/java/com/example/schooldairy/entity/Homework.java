@@ -1,7 +1,7 @@
 package com.example.schooldairy.entity;
 
 import jakarta.persistence.*;
-
+import java.time.LocalDate;
 import lombok.Data;
 
 @Entity
@@ -33,6 +33,9 @@ public class Homework {
 
     @Column(name = "upload_date")
     private String uploadDate;
+
+    @Column (name = "expiryDate")
+    private LocalDate expiryDate;
 
 
 }

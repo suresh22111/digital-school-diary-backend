@@ -14,14 +14,13 @@ public interface HomeworkRepository
             String section
     );
 
-    @Query(
-            value =
-                    "SELECT * FROM homework " +
-                            "WHERE student_class = ?1 " +
-                            "AND section = ?2 " +
-                            "AND STR_TO_DATE(upload_date,'%Y-%m-%d') >= CURDATE() - INTERVAL 7 DAY",
-            nativeQuery = true
-    )
+    @Query("""
+SELECT h
+FROM Homework h
+WHERE h.studentClass = ?1
+AND h.section = ?2
+AND h.expiryDate >= CURRENT_DATE
+""")
     List<Homework> getActiveHomeworkByClassAndSection(
             String studentClass,
             String section

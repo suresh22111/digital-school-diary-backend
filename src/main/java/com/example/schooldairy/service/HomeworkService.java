@@ -54,6 +54,7 @@ public class HomeworkService {
         hw.setUploadDate(
                 LocalDate.now().toString()
         );
+        hw.setExpiryDate(LocalDate.now().plusDays(1));
 
         // Optional File Upload
 
@@ -130,8 +131,9 @@ public class HomeworkService {
             hw.setSubject(subject);
             hw.setContent(content);
             hw.setUploadDate(
-                    java.time.LocalDate.now().toString()
-            );
+                    java.time.LocalDate.now().toString());
+                    hw.setExpiryDate(LocalDate.now().plusDays(1));
+
 
 
 
