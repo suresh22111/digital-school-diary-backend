@@ -14,123 +14,86 @@ public class StudentService {
     @Autowired
     private StudentRepository repository;
 
-    public Student addStudent(
-            Student student
-    ) {
+    public Student addStudent(Student student) {
 
-        Integer studentClass =
-                student.getStudentClass();
+        Integer studentClass = student.getStudentClass();
 
         Student lastStudent =
-                repository
-                        .findTopByStudentClassOrderByStudentIdDesc(
-                                studentClass
-                        );
+                repository.findTopByStudentClassOrderByStudentIdDesc(studentClass);
 
         Long nextStudentId;
 
         if (lastStudent == null) {
 
-            nextStudentId =
-                    Long.parseLong(
-                            studentClass + "001"
-                    );
+            nextStudentId = Long.parseLong(studentClass + "001");
 
         } else {
 
-            nextStudentId =
-                    lastStudent.getStudentId()
-                            + 1;
+            nextStudentId = lastStudent.getStudentId() + 1;
         }
 
-        student.setStudentId(
-                nextStudentId
-        );
+        student.setStudentId(nextStudentId);
 
-        return repository.save(
-                student
-        );
+        // Temporary compatibility with existing code
+        student.setName(student.getFullName());
+
+        return repository.save(student);
     }
 
     public List<Student> getAllStudents() {
 
         return repository.findAll();
     }
+
     public void deleteStudent(Long id) {
 
         repository.deleteById(id);
-
     }
 
-    public Student getStudentByStudentId(
-            Long studentId
-    ) {
+    public Student getStudentByStudentId(Long studentId) {
 
-        return repository
-                .findByStudentId(studentId)
+        return repository.findByStudentId(studentId)
                 .orElse(null);
     }
 
-    public Student updateStudent(
-            Long id,
-            Student student
-    ) {
+    public Student updateStudent(Long id, Student student) {
 
-        Student existing =
-                repository.findById(id)
-                        .orElseThrow();
+        Student existing = repository.findById(id)
+                .orElseThrow();
 
-        existing.setName(
-                student.getName()
-        );
+        // New Name Fields
+        existing.setSurname(student.getSurname());
+        existing.setFirstName(student.getFirstName());
+        existing.setLastName(student.getLastName());
 
-        existing.setStudentClass(
-                student.getStudentClass()
-        );
+        // Temporary compatibility
+        existing.setName(existing.getFullName());
 
-        existing.setSection(
-                student.getSection()
-        );
+        existing.setStudentClass(student.getStudentClass());
 
-        existing.setFatherName(
-                student.getFatherName()
-        );
+        existing.setSection(student.getSection());
 
-        existing.setMotherName(
-                student.getMotherName()
-        );
+        existing.setFatherName(student.getFatherName());
 
-        existing.setParentMobile(
-                student.getParentMobile()
-        );
+        existing.setMotherName(student.getMotherName());
 
-        existing.setEmail(
-                student.getEmail()
-        );
+        existing.setParentMobile(student.getParentMobile());
 
-        existing.setGender(
-                student.getGender()
-        );
+        existing.setEmail(student.getEmail());
 
-        existing.setDateOfBirth(
-                student.getDateOfBirth()
-        );
+        existing.setGender(student.getGender());
 
-        existing.setAddress(
-                student.getAddress()
-        );
+        existing.setDateOfBirth(student.getDateOfBirth());
 
-        existing.setPhotoUrl(
-                student.getPhotoUrl()
-        );
+        existing.setAddress(student.getAddress());
+
+        existing.setPhotoUrl(student.getPhotoUrl());
 
         return repository.save(existing);
     }
 
     public List<Student> getStudentsByClassAndSection(
-
             int studentClass,
-
             String section
     ) {
 
@@ -139,12 +102,9 @@ public class StudentService {
                 section
         );
     }
-    public Student getStudentByMobile(
-            String mobile
-    ) {
 
-        return repository.findByParentMobile(
-                mobile
-        );
+    public Student getStudentByMobile(String mobile) {
+
+        return repository.findByParentMobile(mobile);
     }
 }

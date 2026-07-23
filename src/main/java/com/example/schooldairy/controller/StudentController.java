@@ -1,24 +1,17 @@
 package com.example.schooldairy.controller;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.schooldairy.entity.Student;
 import com.example.schooldairy.repository.StudentRepository;
 import com.example.schooldairy.service.StudentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
-
-import java.util.Map;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/students")
@@ -30,69 +23,53 @@ public class StudentController {
 
     @Autowired
     private StudentRepository studentRepository;
+
     @Autowired
     private Cloudinary cloudinary;
 
-    // Add student API
+    // Add Student
     @PostMapping("/add")
-    public Student addStudent(
-            @RequestBody Student student
-    ) {
+    public Student addStudent(@RequestBody Student student) {
 
         return service.addStudent(student);
     }
 
-    // Get all students API
+    // Get All Students
     @GetMapping
     public List<Student> getAllStudents() {
 
         return service.getAllStudents();
     }
-// delete student
+
+    // Delete Student
     @DeleteMapping("/{id}")
-    public void deleteStudent(
-            @PathVariable Long id
-    ) {
+    public void deleteStudent(@PathVariable Long id) {
+
         service.deleteStudent(id);
     }
 
     // Search by Student ID
-
     @GetMapping("/student-id/{studentId}")
     public Student getStudentByStudentId(
-            @PathVariable Long studentId
-    ) {
+            @PathVariable Long studentId) {
 
-        return service.getStudentByStudentId(
-                studentId
-        );
+        return service.getStudentByStudentId(studentId);
     }
 
-
-// Update Student
-
+    // Update Student
     @PutMapping("/{id}")
     public Student updateStudent(
-
             @PathVariable Long id,
+            @RequestBody Student student) {
 
-            @RequestBody Student student
-
-    ) {
-
-        return service.updateStudent(
-                id,
-                student
-        );
+        return service.updateStudent(id, student);
     }
 
+    // Get Students by Class & Section
     @GetMapping("/class/{studentClass}/section/{section}")
     public List<Student> getStudentsByClassAndSection(
-
             @PathVariable int studentClass,
-
-            @PathVariable String section
-    ) {
+            @PathVariable String section) {
 
         return service.getStudentsByClassAndSection(
                 studentClass,
@@ -100,22 +77,18 @@ public class StudentController {
         );
     }
 
+    // Get Student by Parent Mobile
     @GetMapping("/mobile/{mobile}")
     public Student getStudentByMobile(
+            @PathVariable String mobile) {
 
-            @PathVariable String mobile
-
-    ) {
-
-        return service.getStudentByMobile(
-                mobile
-        );
+        return service.getStudentByMobile(mobile);
     }
 
+    // Upload Student Photo
     @PostMapping("/upload-photo")
     public String uploadPhoto(
-            @RequestParam("file") MultipartFile file
-    ) {
+            @RequestParam("file") MultipartFile file) {
 
         try {
 
@@ -124,18 +97,13 @@ public class StudentController {
                     ObjectUtils.emptyMap()
             );
 
-            String url = uploadResult.get("secure_url").toString();
-
-            System.out.println("Cloudinary URL: " + url);
-
-            return url;
+            return uploadResult.get("secure_url").toString();
 
         } catch (Exception e) {
 
             throw new RuntimeException(
                     "Photo upload failed: " + e.getMessage()
             );
-
         }
     }
 }
